@@ -3,7 +3,8 @@ from django.conf import settings
 from apps.common.models import BaseModel
 
 class Blog(BaseModel):
-    # Foreign Key to your Custom User
+    objects = models.Manager() 
+    
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -11,7 +12,7 @@ class Blog(BaseModel):
     )
     
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, max_length=255) # For URLs like /blog/my-first-post
+    slug = models.SlugField(unique=True, max_length=255)
     content = models.TextField()
 
     def __str__(self):

@@ -16,8 +16,14 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    # Include DRF's login URLs for the browsable API
+    path('api/auth/', include('rest_framework.urls')),
+
+    # Include the blog app URLs
+    path('api/blog/', include('apps.blog.urls')),
 ]

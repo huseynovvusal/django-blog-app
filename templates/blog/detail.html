@@ -3,7 +3,7 @@
 {% block title %}{{ blog.title }} - The Chronicle{% endblock %}
 
 {% block content %}
-<article class="max-w-2xl mx-auto py-12 prose prose-lg prose-amber">
+<article class="max-w-2xl mx-auto py-12">
     <!-- Clean Header -->
     <header class="text-center mb-16 border-b border-gray-200 pb-12">
         <p class="font-ui text-sm uppercase tracking-widest text-amber-700 font-medium mb-4">{{ blog.created_at|date:"F j, Y" }}</p>
@@ -15,10 +15,9 @@
         </div>
     </header>
 
-    <!-- Content -->
-    <div id="blog-content" class="hidden">{{ blog.content }}</div>
-    <div id="markdown-output" class="markdown-body font-serif text-lg leading-loose text-gray-800 tracking-wide selection:bg-amber-100 selection:text-amber-900">
-        <!-- JS Renders here -->
+    <!-- HTML Content (Rendered directly) -->
+    <div class="markdown-body font-serif text-lg leading-loose text-gray-800 tracking-wide selection:bg-amber-100 selection:text-amber-900">
+        {{ blog.content|safe }}
     </div>
 </article>
 
@@ -33,18 +32,8 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const rawContent = document.getElementById('blog-content').innerText;
-        const outputElement = document.getElementById('markdown-output');
-        
-        // Simpler markdown rendering for notepad feel
-        outputElement.innerHTML = marked.parse(rawContent);
-        hljs.highlightAll();
-    });
-</script>
 <style>
-    /* Custom Serif Content Styling */
+    /* Custom Serif Content Styling extended for HTML cleanup */
     .markdown-body h1, .markdown-body h2, .markdown-body h3 { @apply font-bold mt-12 mb-6 text-gray-900 leading-tight; }
     .markdown-body h1 { @apply text-3xl border-b border-amber-900/10 pb-2; }
     .markdown-body h2 { @apply text-2xl; }
@@ -55,9 +44,7 @@
     .markdown-body a { @apply text-amber-800 underline decoration-amber-300 underline-offset-2 hover:text-amber-900 hover:decoration-amber-500 transition-all; }
     .markdown-body strong { @apply font-bold text-gray-900; }
     
-    /* Code Blocks matching the theme (Warm/Light) */
-    .markdown-body pre { @apply bg-[#f4f1ea] border border-[#e8dac1] rounded-sm p-5 overflow-x-auto text-sm my-8 shadow-inner; }
-    .markdown-body code { @apply bg-[#f4f1ea] px-1.5 py-0.5 text-sm font-mono text-amber-900 border border-[#e8dac1] rounded-sm; }
-    .markdown-body pre code { @apply bg-transparent border-0 p-0 text-gray-800; }
+    /* Code Blocks matching the theme */
+    .markdown-body pre { @apply bg-[#f4f1ea] border border-[#e8dac1] rounded-sm p-5 overflow-x-auto text-sm my-8 shadow-inner font-mono; }
 </style>
 {% endblock %}

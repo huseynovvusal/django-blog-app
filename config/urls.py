@@ -24,12 +24,21 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    
+    # Authentication App (Login/Register PAGES)
+    path('auth/', include('apps.authentication.web_urls')),
+    
+    # Standard Django Auth (Logout Logic)
+    path('auth/', include('django.contrib.auth.urls')),
 
     # Session Auth (Browsable API Login)
     path('api/session-auth/', include('rest_framework.urls')),
 
-    # Blog App
+    # Blog App (API)
     path('api/blog/', include('apps.blog.urls')),
+
+    # Website (Templates)
+    path('', include('apps.blog.web_urls')),
 
     # Authentication App (Login/Register)
     path('api/auth/', include('apps.authentication.urls')),

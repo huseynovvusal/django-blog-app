@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Latest Writings - The Chronicle{% endblock %}
+
+{% block content %}
+<div class="space-y-12">
+    <!-- Clean, simple list layout -->
+    <ul class="divide-y divide-gray-200">
+        {% for blog in blogs %}
+        <li class="py-10 first:pt-0 last:pb-0 hover:bg-yellow-50/10 transition-colors duration-300">
+            <article>
+                <div class="flex items-center text-xs font-ui text-gray-500 mb-2 gap-3 uppercase tracking-wide">
+                    <time datetime="{{ blog.created_at|date:'Y-m-d' }}">{{ blog.created_at|date:"F j, Y" }}</time>
+                    <span class="w-1 h-1 rounded-full bg-gray-300"></span>
+                    <span>By {{ blog.author.username }}</span>
+                </div>
+                
+                <h2 class="text-2xl font-bold tracking-tight text-gray-900 mb-3 leading-snug">
+                    <a href="{% url 'blog_web:detail' blog.slug %}" class="hover:text-amber-900 transition-colors border-b-2 border-transparent hover:border-amber-200 decoration-none pb-1">
+                        {{ blog.title }}
+                    </a>
+                </h2>
+                
+                <p class="text-lg text-gray-700 leading-relaxed max-w-2xl font-light">
+                    {{ blog.content|striptags|truncatewords:40 }}
+                </p>
+                
+                <div class="mt-4 font-ui text-sm font-medium">
+                    <a href="{% url 'blog_web:detail' blog.slug %}" class="text-amber-800 hover:text-amber-900 group flex items-center gap-1">
+                        Read full story <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+                    </a>
+                </div>
+            </article>
+        </li>
+        {% empty %}
+        <li class="py-20 text-center">
+            <p class="text-xl text-gray-400 font-light italic">The pages are empty. Start writing something new.</p>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Minimal Pagination -->
+    {% if is_paginated %}
+    <nav class="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0 py-8 mt-12 font-ui text-sm text-gray-500 uppercase tracking-widest">
+        <div class="-mt-px flex w-0 flex-1">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="inline-flex items-center border-t-2 border-transparent pt-4 pr-1 font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
+                &larr; Previous
+            </a>
+            {% endif %}
+        </div>
+        <div class="-mt-px flex w-0 flex-1 justify-end">
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="inline-flex items-center border-t-2 border-transparent pt-4 pl-1 font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
+                Next &rarr;
+            </a>
+            {% endif %}
+        </div>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

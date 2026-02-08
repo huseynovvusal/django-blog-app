@@ -11,15 +11,32 @@ from .selectors import blog_list
 from .services import create_blog, update_blog, delete_blog
 from .permissions import IsOwnerOrReadOnly
 from .models import Blog
+from rest_framework import serializers
+
+from apps.common.pagination import LimitOffsetPagination
 
 class BlogListCreateApi(APIView):
     permission_classes = [IsAuthenticated]
+    
+    class Pagination(LimitOffsetPagination):
+        default_limit = 10
 
-    def get(self, _request):
-        blogs = blog_list()
-        serializer = BlogListOutputSerializer(blogs, many=True)
+    class InputSerializer(serializers.Serializer):
+        search = serializers.CharField(required=False)
+        author_id = serializers.IntegerField(required=False)
+        created_at = serializers.DateField(required=False)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get(self, request):
+        filters_serializer = self.InputSerializer(data=request.query_params)
+        filters_serializer.is_valid(raise_exception=True)
+
+        blogs = blog_list(filters=filters_serializer.validated_data)
+        
+        paginator = self.Pagination()
+        paginated_blogs = paginator.paginate_queryset(blogs, request)
+        
+        serializer = BlogListOutputSerializer(paginated_blogs, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         serializer = BlogCreateInputSerializer(data=request.data)

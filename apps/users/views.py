@@ -1,20 +1,7 @@
+from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
-from .serializers import UserRegisterSerializer
 
-class RegisterApi(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request):
-        serailizer = UserRegisterSerializer(data=request.data)
-        serailizer.is_valid(raise_exception=True)
-
-        user = serailizer.save()
-
-        return Response({
-            'id': user.id,
-            'username': user.username,
-            'email': user.email
-        }, status=status.HTTP_201_CREATED)
+# Create your views here.
+# This file will handle User Profile views (e.g., Get My Profile, Update Avatar)

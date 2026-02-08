@@ -25,16 +25,12 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
 
-    # Include DRF's login URLs for the browsable API
-    path('api/auth/', include('rest_framework.urls')),
+    # Session Auth (Browsable API Login)
+    path('api/session-auth/', include('rest_framework.urls')),
 
-    # Include the blog app URLs
+    # Blog App
     path('api/blog/', include('apps.blog.urls')),
 
-    # Include the users app URLs
-    path('api/users/', include('apps.users.urls')),
-
-    # JWT
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    # Authentication App (Login/Register)
+    path('api/auth/', include('apps.authentication.urls')),
 ]

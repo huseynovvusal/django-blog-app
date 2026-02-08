@@ -1,6 +1,5 @@
 from django.urls import path
-from .views import RegisterApi
 
 urlpatterns = [
-    path('register/', RegisterApi.as_view(), name='register')
+    # Add user profile URLs here later (e.g., 'me/', 'profile/')
 ]

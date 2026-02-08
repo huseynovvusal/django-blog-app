@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "apps.users",
     'apps.common',
     'apps.blog',
+    'apps.authentication',
 ]
 
 MIDDLEWARE = [

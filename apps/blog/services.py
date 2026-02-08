@@ -23,5 +23,14 @@ def create_blog(user: "User", title: str, content: str) -> Blog:
 
     return blog
 
+def update_blog(blog: "Blog", title: str, content: str) -> Blog:
+    blog.title = title
+    blog.content = content
 
+    blog.save()
+
+    return blog
+
+def delete_blog(blog: "Blog") -> None:
+    blog.delete()
 

@@ -29,6 +29,9 @@ A professional, modularized Django-based blog application featuring **JWT authen
 │   ├── common/          # Shared models (BaseModel), pagination, etc.
 │   └── users/           # Custom User model and management
 ├── config/              # Project settings and root URL configurations
+├── docker/              # Docker configurations
+│   ├── local/           # Development Dockerfile
+│   └── production/      # Production Dockerfile
 ├── requirements/        # Base and local dependency management
 ├── templates/           # HTML templates for frontend views
 └── manage.py            # Django management CLI
@@ -39,10 +42,12 @@ A professional, modularized Django-based blog application featuring **JWT authen
 ### Prerequisites
 
 - Python 3.10+
-- Docker & Docker Compose
-- Virtualenv (recommended)
+- Docker & Docker Compose (recommended)
+- PostgreSQL (if running locally without Docker)
 
-### Environment Setup
+### Quick Start with Docker (Recommended)
+
+#### Development Environment
 
 1. **Clone the repository**:
    ```bash
@@ -56,25 +61,66 @@ A professional, modularized Django-based blog application featuring **JWT authen
    POSTGRES_DB=blog_db
    POSTGRES_USER=blog_user
    POSTGRES_PASSWORD=your_password
-   POSTGRES_HOST=localhost
+   POSTGRES_HOST=db
    POSTGRES_PORT=5432
    ```
 
-3. **Initialize Database (Docker)**:
+3. **Build and Start Services**:
    ```bash
-   docker-compose up -d
+   docker-compose up --build
    ```
 
-4. **Install Dependencies**:
+4. **Run Migrations** (in a new terminal):
+   ```bash
+   docker-compose exec web python manage.py migrate
+   docker-compose exec web python manage.py createsuperuser
+   ```
+
+5. **Access the Application**:
+   - Web: `http://localhost:8000`
+   - Admin: `http://localhost:8000/admin`
+
+#### Production Environment
+
+1. **Configure Production Environment**:
+   Create a `.env.docker` file with production settings:
+   ```env
+   POSTGRES_DB=blog_db
+   POSTGRES_USER=blog_user
+   POSTGRES_PASSWORD=secure_production_password
+   POSTGRES_HOST=db
+   POSTGRES_PORT=5432
+   DEBUG=False
+   SECRET_KEY=your_production_secret_key
+   ```
+
+2. **Build and Deploy**:
+   ```bash
+   docker-compose -f docker-compose.prod.yml up --build -d
+   ```
+
+3. **Run Production Setup**:
+   ```bash
+   docker-compose -f docker-compose.prod.yml exec web python manage.py migrate
+   docker-compose -f docker-compose.prod.yml exec web python manage.py createsuperuser
+   docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --noinput
+   ```
+
+### Local Development (Without Docker)
+
+1. **Install Dependencies**:
    ```bash
    python -m venv .venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    pip install -r requirements/local.txt
    ```
 
-5. **Run Migrations & Start Server**:
+2. **Setup PostgreSQL** and configure `.env` with `POSTGRES_HOST=localhost`
+
+3. **Run Migrations & Start Server**:
    ```bash
    python manage.py migrate
+   python manage.py createsuperuser
    python manage.py runserver
    ```
 

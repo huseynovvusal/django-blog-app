@@ -25,11 +25,8 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     path("admin/", admin.site.urls),
     
-    # Authentication App (Login/Register PAGES)
+    # Authentication App (Login/Register/Logout PAGES)
     path('auth/', include('apps.authentication.web_urls')),
-    
-    # Standard Django Auth (Logout Logic)
-    path('auth/', include('django.contrib.auth.urls')),
 
     # Session Auth (Browsable API Login)
     path('api/session-auth/', include('rest_framework.urls')),
